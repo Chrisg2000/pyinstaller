@@ -54,6 +54,8 @@ DECLPROC(Py_SetPythonHome);
 
 /* other functions */
 DECLPROC(PyDict_GetItemString);
+DECLPROC(PyDict_SetItemString);
+DECLPROC(PyDict_Copy);
 DECLPROC(PyErr_Clear);
 DECLPROC(PyErr_Occurred);
 DECLPROC(PyErr_Print);
@@ -119,6 +121,8 @@ pyi_python_map_names(HMODULE dll, int pyvers)
 
     /* other functions */
     GETPROC(dll, PyDict_GetItemString);
+    GETPROC(dll, PyDict_SetItemString);
+    GETPROC(dll, PyDict_Copy);
     GETPROC(dll, PyErr_Clear);
     GETPROC(dll, PyErr_Occurred);
     GETPROC(dll, PyErr_Print);

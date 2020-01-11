@@ -117,6 +117,8 @@ EXTDECLPROC(PyObject *, PyImport_ImportModule, (char *));
 EXTDECLPROC(PyObject *, PyImport_AddModule, (char *));
 
 EXTDECLPROC(int, PyObject_SetAttrString, (PyObject *, char *, PyObject *));
+EXTDECLPROC(int, PyDict_SetItemString, (PyObject *, const char *, PyObject *));
+EXTDECLPROC(PyObject *, PyDict_Copy, (PyObject *));
 EXTDECLPROC(PyObject *, PyList_New, (int));
 EXTDECLPROC(int, PyList_Append, (PyObject *, PyObject *));
 /* Create a new value based on a format string similar to those accepted by the PyArg_Parse*() */

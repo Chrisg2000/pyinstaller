@@ -371,7 +371,7 @@ pyi_launch_run_scripts(ARCHIVE_STATUS *status)
     TOC * ptoc = status->tocbuff;
     PyObject *__main__;
     PyObject *__file__;
-    PyObject *main_dict;
+    PyObject *main_dict, *local_main_dict;
     PyObject *code, *retval;
 
     __main__ = PI_PyImport_AddModule("__main__");
@@ -401,6 +401,10 @@ pyi_launch_run_scripts(ARCHIVE_STATUS *status)
                 return -1;
             }
 
+            /* For each script to have its own namespace, a copy
+             * of __main__'s namespace is created */
+            local_main_dict = PI_PyDict_Copy(main_dict);
+
             strcpy(buf, ptoc->name);
             strcat(buf, ".py");
             VS("LOADER: Running %s\n", buf);
@@ -411,7 +415,7 @@ pyi_launch_run_scripts(ARCHIVE_STATUS *status)
             else {
                 __file__ = PI_PyUnicode_FromString(buf);
             };
-            PI_PyObject_SetAttrString(__main__, "__file__", __file__);
+            PI_PyDict_SetItemString(local_main_dict, "__file__", __file__);
             Py_DECREF(__file__);
 
             /* Unmarshall code object */
@@ -423,8 +427,9 @@ pyi_launch_run_scripts(ARCHIVE_STATUS *status)
                 return -1;
             }
             /* Run it */
-            retval = PI_PyEval_EvalCode(code, main_dict, main_dict);
+            retval = PI_PyEval_EvalCode(code, local_main_dict, local_main_dict);
 
+            Py_DECREF(local_main_dict);
             /* If retval is NULL, an error occured. Otherwise, it is a Python object.
              * (Since we evaluate module-level code, which is not allowed to return an
              * object, the Python object returned is always None.) */
